@@ -1,0 +1,90 @@
+// C++ code
+//
+#include <Servo.h>
+#include <Stepper.h>
+int stepsPerRevolution = 2048;
+int motSpeed = 12;
+Stepper myStepper(stepsPerRevolution,8,10,9,11);
+int dt = 1500;
+int x=0;
+int x1=180;
+int trig=6;
+int eco=5;
+int motor1=2;
+int motor2=4;
+int motor3=7;
+int duracion =0;
+int distancia =0;
+int demora =20;
+int numero=0;
+int contador=0;
+int motorn=0;
+
+Servo serv;
+void setup()
+{
+  pinMode(2, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(eco, INPUT);
+  serv.attach(3, 500, 2500);
+  myStepper.setSpeed(motSpeed);
+}
+
+void loop()
+{
+
+	digitalWrite(trig, HIGH);
+  	delay(1);
+  	digitalWrite(trig, LOW);
+  	duracion = pulseIn(eco,HIGH);
+  	distancia = duracion/58.2;
+  	Serial.println(duracion);
+  	delay(200);
+  	if (distancia < 10){
+  		myStepper.step(stepsPerRevolution);
+  		delay(dt);
+  		myStepper.step(-stepsPerRevolution);
+  		delay(dt);
+    }
+  
+  	numero = rand() % 6;
+  	contador = contador +1;
+    motorn= rand() % 3 +1;
+      
+      	
+    if (5 == numero){
+     	if (motorn ==1){
+    		digitalWrite(motor1,HIGH);
+            delay(1000);
+        }
+        else if (motorn ==2){
+            digitalWrite(motor2,HIGH);
+            delay(1000);
+        }
+        else {
+            digitalWrite(motor3,HIGH);
+            delay(1000);
+        }
+  	digitalWrite(motor1,LOW);
+    digitalWrite(motor2,LOW);
+    digitalWrite(motor3,LOW);
+    }
+    if (x<180){
+        x=x+20;
+        serv.write(x);
+          delay(500);
+          if (x1==0){x1=180;}
+
+  }
+  	else{ 
+        x1=x1-20;
+          serv.write(x1);
+        delay(500);
+        if (x==180 && x1==0){x=0;}
+
+  }
+
+  	
+}
