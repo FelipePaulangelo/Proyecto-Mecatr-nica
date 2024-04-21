@@ -48,12 +48,11 @@ void loop()
   		myStepper.step(-stepsPerRevolution);
   		delay(dt);
     }
-  
-  	numero = rand() % 6;
-  	contador = contador +1;
+    % Lo siguiente es para que el mecanismo para que los topos suban sea aleatorio, numero guarda un valor aleatorio entre 0 y 5, motorn guarda un valor aleatorio entre 1 y 3, decide cual topo se levanta
+    numero = rand() % 6;
     motorn= rand() % 3 +1;
       
-      	
+    % 1 en 6 posibilidades de que alguno de los topos suba
     if (5 == numero){
      	if (motorn ==1){
     		digitalWrite(motor1,HIGH);
@@ -67,7 +66,7 @@ void loop()
             digitalWrite(motor3,HIGH);
             delay(1000);
         }
-  	digitalWrite(motor1,LOW);
+    digitalWrite(motor1,LOW);
     digitalWrite(motor2,LOW);
     digitalWrite(motor3,LOW);
     }
