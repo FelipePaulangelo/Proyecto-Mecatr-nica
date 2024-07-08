@@ -1,89 +1,174 @@
-// C++ code
+/ C++ code
 //
 #include <Servo.h>
-#include <Stepper.h>
-int stepsPerRevolution = 2048;
-int motSpeed = 12;
-Stepper myStepper(stepsPerRevolution,8,10,9,11);
-int dt = 1500;
+int a=0;
+int b=0;
+int comienza=0;
+int boton=12;
+int ida = 1;
+int i=0;
 int x=0;
-int x1=180;
-int trig=6;
-int eco=5;
-int motor1=2;
-int motor2=4;
-int motor3=7;
+int y=0;
+int trig=8;
+int eco=7;
 int duracion =0;
 int distancia =0;
 int demora =20;
-int numero=0;
-int contador=0;
 int motorn=0;
 
-Servo serv;
+Servo serv1;
+Servo serv2;
+Servo serv3;
+Servo serv4;
+Servo serv5;
 void setup()
 {
-  pinMode(2, OUTPUT);
-  pinMode(4, OUTPUT);
-  pinMode(7, OUTPUT);
   pinMode(trig, OUTPUT);
   pinMode(eco, INPUT);
-  serv.attach(3, 500, 2500);
-  myStepper.setSpeed(motSpeed);
+  serv1.attach(3, 500, 2500);
+  serv2.attach(5, 500, 2500);
+  serv3.attach(6, 500, 2500);
+  serv4.attach(9, 500, 2500);
+  serv5.attach(10, 500, 2500);
+  serv4.write(0);
+  serv5.write(90);
+  serv1.write(120);
+  serv2.write(120);
+  serv3.write(120);
+  motorn= rand() % 3 +1;
+      
+      	
+     	if (motorn ==1){
+            for(i=120;i>=0;i=i-2){
+              serv1.write(i);
+              delay(50);
+            }
+          }
+          else if (motorn ==2){
+            for(i=120;i>=0;i=i-2){
+              serv2.write(i);
+              delay(50);
+            }
+          }
+          else if(motorn ==3){
+            for(i=120;i>=0;i=i-2){
+              serv3.write(i);
+              delay(50);
+            }
+          }
+  	
 }
+/*
+
+*/
 
 void loop()
 {
 
-	digitalWrite(trig, HIGH);
-  	delay(1);
-  	digitalWrite(trig, LOW);
-  	duracion = pulseIn(eco,HIGH);
-  	distancia = duracion/58.2;
-  	Serial.println(duracion);
-  	delay(200);
-  	if (distancia < 10){
-  		myStepper.step(stepsPerRevolution);
-  		delay(dt);
-  		myStepper.step(-stepsPerRevolution);
-  		delay(dt);
+	a=digitalRead(boton);
+  
+ 	if (a!= b){
+  		b=a;
+      if (a==1){  
+      comienza=comienza+1;
+      }
     }
-    % Lo siguiente es para que el mecanismo para que los topos suban sea aleatorio, numero guarda un valor aleatorio entre 0 y 5, motorn guarda un valor aleatorio entre 1 y 3, decide cual topo se levanta
-    numero = rand() % 6;
-    motorn= rand() % 3 +1;
+  if (comienza%2==1){
+    digitalWrite(trig, HIGH);
+    delay(1);
+    digitalWrite(trig, LOW);
+    duracion = pulseIn(eco,HIGH);
+    distancia = duracion/58.2;
+    Serial.println(distancia);
+    
+    if (distancia < 18){
+      if (ida==1){
+        for(i=x;i<=x+18;i=i+2){
+                serv4.write(i);
+                delay(50);
+              }
+        x=x+18;
+      }
+      else{
+        for(i=x;i<=x+18;i=i+2){
+                serv4.write(i);
+                delay(50);
+        }
+        x=x+18;
+      }
+        for(i=90;i>=0;i=i-2){
+        serv5.write(i);
+        delay(30);
+        }
+        if (motorn ==1){
+            for(i=0;i<=130;i=i+2){
+                serv1.write(i);
+                delay(50);
+            }
+          }
+            else if (motorn ==2){
+            for(i=0;i<=120;i=i+2){
+                serv2.write(i);
+                delay(50);
+            }
+          }
+            else if(motorn ==3){
+              for(i=0;i<=120;i=i+2){
+                serv3.write(i);
+                delay(50);
+            }
+          }
+      for(i=0;i<=90;i=i+2){
+                serv5.write(i);
+                delay(30);
+              }
+      motorn=0;
+      if (motorn==0){
+        motorn= rand() % 3 +1;
+          
+            
+            if (motorn ==1){
+                for(i=120;i>=0;i=i-2){
+                  serv1.write(i);
+                  delay(50);
+                }
+              }
+              else if (motorn ==2){
+                for(i=120;i>=0;i=i-2){
+                  serv2.write(i);
+                  delay(50);
+                }
+              }
+              else if(motorn ==3){
+                for(i=120;i>=0;i=i-2){
+                  serv3.write(i);
+                  delay(50);
+                }
+              }
+        
+      }
+    }
+    
+    
+      if(x>=180 || ida==0){
+        ida=0;
+        for(i=x;i>=x-20;i=i-1){
+        serv4.write(i);
+        delay(50);
+        }
+        x=x-20;
+        if(x<0){ida=1;}
+      }
       
-    % 1 en 6 posibilidades de que alguno de los topos suba
-    if (5 == numero){
-     	if (motorn ==1){
-    		digitalWrite(motor1,HIGH);
-            delay(1000);
+      
+      if (ida==1){
+        for(i=x;i<=x+20;i=i+1){
+        serv4.write(i);
+        delay(50);
         }
-        else if (motorn ==2){
-            digitalWrite(motor2,HIGH);
-            delay(1000);
-        }
-        else {
-            digitalWrite(motor3,HIGH);
-            delay(1000);
-        }
-    digitalWrite(motor1,LOW);
-    digitalWrite(motor2,LOW);
-    digitalWrite(motor3,LOW);
-    }
-    if (x<180){
         x=x+20;
-        serv.write(x);
-          delay(500);
-          if (x1==0){x1=180;}
-
+      }
   }
-  	else{ 
-        x1=x1-20;
-          serv.write(x1);
-        delay(500);
-        if (x==180 && x1==0){x=0;}
-
-  }
-
-  	
+  
+  
 }
